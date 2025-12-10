@@ -21,7 +21,7 @@ const Login = () => {
       
       if (result.success) {
         toast.success('Login successful!');
-        navigate('/dashboard');
+        navigate('/app');
       } else {
         console.log('About to show error toast with message:', result.message);
         // Simple toast call without custom options first

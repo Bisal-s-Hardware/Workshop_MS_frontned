@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import RoleProtectedRoute from './components/RoleProtectedRoute';
 import Layout from './components/Layout';
+import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -20,10 +21,10 @@ function RoleBasedRedirect() {
   
   // Redirect user-admin to Users page, others to Dashboard
   if (user?.role === 'user-admin') {
-    return <Navigate to="/users" replace />;
+    return <Navigate to="/app/users" replace />;
   }
   
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/app/dashboard" replace />;
 }
 
 function App() {
@@ -44,11 +45,12 @@ function App() {
           style={{ zIndex: 9999 }}
         />
         <Routes>
+          <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
           <Route
-            path="/"
+            path="/app"
             element={
               <PrivateRoute>
                 <Layout />
