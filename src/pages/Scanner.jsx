@@ -1,21 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { transactionService, itemService } from '../services';
 import { toast } from 'react-toastify';
 import { FiCheckCircle, FiAlertCircle, FiX, FiTrash2 } from 'react-icons/fi';
 
 const Scanner = () => {
   const [manualCode, setManualCode] = useState('');
-  const [action, setAction] = useState('CheckOut');
-  const [notes, setNotes] = useState('');
-  const [checkoutPerson, setCheckoutPerson] = useState('');
-  const [projectName, setProjectName] = useState('');
-  const [itemList, setItemList] = useState([]);
+  const [action, setAction] = useState(() => localStorage.getItem('scanner_action') || 'CheckOut');
+  const [notes, setNotes] = useState(() => localStorage.getItem('scanner_notes') || '');
+  const [checkoutPerson, setCheckoutPerson] = useState(() => localStorage.getItem('scanner_person') || '');
+  const [projectName, setProjectName] = useState(() => localStorage.getItem('scanner_project') || '');
+  const [itemList, setItemList] = useState(() => {
+    const saved = localStorage.getItem('scanner_itemList');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
 
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('scanner_action', action);
+    localStorage.setItem('scanner_notes', notes);
+    localStorage.setItem('scanner_person', checkoutPerson);
+    localStorage.setItem('scanner_project', projectName);
+    localStorage.setItem('scanner_itemList', JSON.stringify(itemList));
+  }, [action, notes, checkoutPerson, projectName, itemList]);
+
   const handleAddItem = async (e) => {
     e.preventDefault();
-    
+
     if (!manualCode.trim()) {
       toast.error('Please enter an item code');
       return;
@@ -154,11 +166,10 @@ const Scanner = () => {
                       setAction('CheckOut');
                       setItemList([]);
                     }}
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                      action === 'CheckOut'
+                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${action === 'CheckOut'
                         ? 'bg-red-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                      }`}
                   >
                     Check Out
                   </button>
@@ -167,11 +178,10 @@ const Scanner = () => {
                       setAction('CheckIn');
                       setItemList([]);
                     }}
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                      action === 'CheckIn'
+                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${action === 'CheckIn'
                         ? 'bg-green-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                      }`}
                   >
                     Check In
                   </button>
@@ -281,11 +291,10 @@ const Scanner = () => {
             <button
               onClick={handleProcessAll}
               disabled={processing || itemList.length === 0}
-              className={`flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-colors disabled:opacity-50 ${
-                action === 'CheckOut'
+              className={`flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-colors disabled:opacity-50 ${action === 'CheckOut'
                   ? 'bg-red-600 hover:bg-red-700'
                   : 'bg-green-600 hover:bg-green-700'
-              }`}
+                }`}
             >
               {processing
                 ? 'Processing...'
@@ -310,11 +319,10 @@ const Scanner = () => {
               Item List ({itemList.length})
             </h3>
             {itemList.length > 0 && (
-              <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                action === 'CheckOut'
+              <span className={`px-3 py-1 text-xs font-medium rounded-full ${action === 'CheckOut'
                   ? 'bg-red-100 text-red-700'
                   : 'bg-green-100 text-green-700'
-              }`}>
+                }`}>
                 {action === 'CheckOut' ? 'Checking Out' : 'Checking In'}
               </span>
             )}
@@ -344,11 +352,10 @@ const Scanner = () => {
                         <p className="text-xs text-gray-500 mt-1">{item.description}</p>
                       )}
                       <div className="mt-2">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          item.status === 'Inside'
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Inside'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                        }`}>
+                          }`}>
                           Current: {item.status}
                         </span>
                       </div>
