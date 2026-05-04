@@ -33,7 +33,7 @@ const Transactions = () => {
   const exportToCSV = () => {
     const headers = ['Date', 'Item Code', 'Item Name', 'Action', 'User', 'Checkout Person', 'Project Name', 'Notes'];
     const rows = transactions.map(t => [
-      new Date(t.timestamp).toLocaleString(),
+      new Date(t.timestamp).toLocaleString('en-US', { timeZone: 'Asia/Colombo' }),
       t.itemCode,
       t.itemName,
       t.action,
@@ -152,7 +152,7 @@ const Transactions = () => {
               {transactions.map((transaction) => (
                 <tr key={transaction._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(transaction.timestamp).toLocaleString()}
+                    {new Date(transaction.timestamp).toLocaleString('en-US', { timeZone: 'Asia/Colombo' })}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {transaction.itemCode}

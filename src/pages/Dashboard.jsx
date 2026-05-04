@@ -115,7 +115,7 @@ const Dashboard = () => {
                     </p>
                     <p className="text-sm text-gray-600">
                       {transaction.userName || transaction.user?.name} •{' '}
-                      {new Date(transaction.timestamp).toLocaleString()}
+                      {new Date(transaction.timestamp).toLocaleString('en-US', { timeZone: 'Asia/Colombo' })}
                     </p>
                   </div>
                   <span

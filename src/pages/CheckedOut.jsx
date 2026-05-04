@@ -51,6 +51,7 @@ const CheckedOut = () => {
 
   const formatDate = (date) => {
     return new Date(date).toLocaleString('en-US', {
+      timeZone: 'Asia/Colombo',
       month: 'short',
       day: 'numeric',
       year: 'numeric',
